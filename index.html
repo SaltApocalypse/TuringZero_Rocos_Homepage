@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="author" content="TuringZero" />
+	<meta name="description" content="This's a three.js-based showcase page from TuringZero." />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="stylesheet" href="style.css" />
+	<title>3D Model Viewer</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			overflow: hidden;
+			/* Prevents scrollbars */
+		}
+
+		#canvas-container {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+		}
+
+		canvas {
+			display: block;
+			/* Removes small gap at bottom */
+		}
+
+		/* Style for GUI to ensure it appears above the canvas */
+		.dg.ac {
+			z-index: 1000 !important;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="canvas-container"></div>
+	<script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

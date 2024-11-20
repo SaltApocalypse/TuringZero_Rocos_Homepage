@@ -1,0 +1,5 @@
+node_modules
+*.code-workspace
+
+# 个人素材
+public/models/*
