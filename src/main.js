@@ -4,11 +4,10 @@
 import * as App from './application';
 import * as Global from './global';
 import * as Gui from './gui';
-import * as Scene from './scene';
 
 async function main () {
     // 场景定义
-    const { scene, camera, renderer, controls } = Scene.initScene();
+    const { scene, camera, renderer, controls } = App.initScene();
 
     // 数据初始化
     await App.initModelList().then((modelList) => {

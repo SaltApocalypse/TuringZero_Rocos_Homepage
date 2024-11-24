@@ -5,7 +5,6 @@ import * as dat from 'dat.gui';
 
 import * as App from './application';
 import * as Global from './global';
-import * as Scene from './scene';
 
 // ========== 初始化 GUI 界面 ========== //
 export async function initGUI (scene) {
@@ -16,13 +15,13 @@ export async function initGUI (scene) {
 
     sceneFolder.add(Global._guiSettings, 'showAxes').onChange(() => {
         let showAxes = Global.guiSettings_get('showAxes');
-        let axesHelper = Scene.axesHelper;
+        let axesHelper = App.axesHelper;
         if (showAxes) { scene.add(axesHelper); } else { scene.remove(axesHelper); }
     });
 
     sceneFolder.add(Global._guiSettings, 'showGrid').onChange(() => {
         let showGrid = Global.guiSettings_get('showGrid');
-        let gridHelper = Scene.gridHelper;
+        let gridHelper = App.gridHelper;
         if (showGrid) { scene.add(gridHelper); } else { scene.remove(gridHelper); }
     });
 
