@@ -1,31 +1,23 @@
 // ==================== main.js ==================== //
 // Describe: 主函数
 // ================================================= //
-import * as App from './application';
-import * as Global from './global';
-import * as Gui from './gui';
+import * as APP from './application';
+
+export const DEBUG_MODE = true;
+// export const DEBUG_MODE = false;
 
 async function main () {
     // 场景定义
-    const { scene, camera, renderer, controls } = App.initScene();
-
-    // 数据初始化
-    await App.initModelList().then((modelList) => {
-        Global.modelList_set(modelList);
-    });
+    const { scene, camera, renderer, controls } = new APP.Scene();
 
     // 地板初始化
-    Global.floor_set(new App.Floor());
-    scene.add(Global.floor_get().floortiles)
+    const floor = new APP.Floor();
+    scene.add(floor.floortiles)
 
-    // 加载第一个模型
-    if (Global.modelList_getLength() > 0) {
-        let firstModel = Global.modelList_get()[0];
-        await App.loadModel(scene, firstModel);
-    }
-
-    // GUI初始化
-    Gui.initGUI(scene);
+    // 模型初始化
+    const model = new APP.Model();
+    if (model.modelList != [])
+        model.loadModel(model.modelList[0]);
 
     // 动画循环
     function animate () {
@@ -34,6 +26,13 @@ async function main () {
         controls.update();
     }
     animate();
+
+    // 监听：窗口变化
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -3,3 +3,4 @@ node_modules
 
 # 个人素材
 public/models/*
+src/backup.js
