@@ -14,8 +14,10 @@ async function main () {
         Global.modelList_set(modelList);
     });
 
-    // 场景初始化
-    App.initFloor(scene);
+    // 地板初始化
+    Global.floor_set(new App.Floor());
+    scene.add(Global.floor_get().floortiles)
+
     // 加载第一个模型
     if (Global.modelList_getLength() > 0) {
         let firstModel = Global.modelList_get()[0];

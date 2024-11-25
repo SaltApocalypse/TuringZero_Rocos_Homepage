@@ -14,7 +14,6 @@ import * as Global from './global';
 // ========== 初始化变量 ========== //
 export var currentModel = null; // 当前模型
 let basicScale = null; // 模型“标准”尺寸
-const floorList = []; // 地面瓷砖（整个地面是由一片片瓷砖构成的，用于制作动画）
 
 export const axesHelper = new THREE.AxesHelper(100); // 轴线
 export const gridHelper = new THREE.GridHelper(11, 11); // 网格
@@ -81,100 +80,6 @@ export function initScene () {
     return { scene, camera, renderer, controls };
 }
 
-// ========== 地板功能实现 ========== //
-// 初始化地板
-export async function initFloor (scene, color = 0xffffff) {
-    const STARTPOSITION = -4;
-    let floorCount = 0;
-
-    for (let i = STARTPOSITION; i <= -STARTPOSITION; i++) {
-        for (let j = STARTPOSITION; j <= -STARTPOSITION; j++) {
-            const floor = await createFloorTile(color);
-            floor.material.transparent = true;
-            floor.material.opacity = 0;
-
-            floor.position.x = i;
-            floor.position.z = j;
-            floor.manDis = Math.abs(i) + Math.abs(j);
-
-            floorList.push(floor);
-            scene.add(floor);
-            floorCount++;
-
-        }
-    }
-
-    // 渐变入场
-    if (floorCount === 81) {
-        floorList.forEach(floor => {
-            gsap.to(floor.material, {
-                opacity: 1,
-                duration: 1.0 / (0.8 * Global.guiSettings_get('animateRate')),
-                ease: 'power2.inOut',
-                delay: floor.manDis * 0.05
-            })
-        })
-    }
-
-    moveFloor(0);
-
-    // 创建地面
-    async function createFloorTile (color) {
-        return new Promise((resolve) => {
-            let floor = new THREE.Mesh(
-                new THREE.BoxGeometry(1, 1, 0),
-                new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide })
-            );
-            floor.position.y = -5;
-            floor.rotation.x = Math.PI / 2;
-            resolve(floor);
-        })
-    }
-}
-
-/**
- * floor 的升降动画
- * @param state 0-rising, 1-falling
- */
-export function moveFloor (state) {
-    // 每块瓷砖的动画 升降和材质
-    floorList.forEach(floor => {
-        gsap.to(floor.position, {
-            y: state * (-2),
-            duration: 1.0 / (0.8 * Global.guiSettings_get('animateRate')),
-            ease: 'power2.inOut',
-            delay: floor.manDis * 0.05
-        });
-    });
-
-    // 轴线和网格
-    let showAxes = Global.guiSettings_get('showAxes');
-    let showGrid = Global.guiSettings_get('showGrid');
-    let animateRate = Global.guiSettings_get('animateRate');
-
-    if (showAxes) {
-        gsap.to(axesHelper.position, {
-            y: state * (-2),
-            duration: 1.0 / animateRate,
-            ease: 'power2.inOut'
-        });
-    }
-
-    if (showGrid) {
-        gsap.to(gridHelper.position, {
-            y: state * (-2),
-            duration: 1.0 / animateRate,
-            ease: 'power2.inOut'
-        });
-        gsap.to(gridHelper.material, {
-            opacity: 1 - state,
-            duration: 1.0 / animateRate,
-            ease: 'power2.inOut',
-            delay: state ? 0 : 4 * 4 * 0.05
-        });
-    }
-}
-
 // ========== 模型功能实现 ========== //
 /**
  * 加载指定模型
@@ -217,21 +122,15 @@ export async function loadModel (scene, modelName) {
 
             // FIXME: 光照问题
             function setContent (object, clips) {
-                object.updateMatrixWorld(true);
-
-                const box = new THREE.Box3().setFromObject(object);
-                const center = box.getCenter(new THREE.Vector3());
-
                 // 设置位置
                 object.position.set(0, 0, 0);
-                // object.position.x -= center.x;
-                // object.position.y -= center.y;
-                // object.position.z -= center.z;
+                // FIXME: 模型位置偏移
 
                 object.traverse((child) => {
+                    // console.log(child);
+
                     if (child.isMesh) {
-                        const worldPosition = child.getWorldPosition(new THREE.Vector3());
-                        child.startPosition = worldPosition.clone();
+                        child.startPosition = child.position.clone();
                     }
                     if (child.material) {
                         child.material.transparent = true;
@@ -311,4 +210,93 @@ export function mergeModel (model = currentModel) {
         }
     });
 }
-// FIXME: 修复模型合并时候位置错误（变回了加载错误时的位置）
+
+// ========== 地面类 ========== //
+export class Floor {
+    /**
+    * @param size 尺寸
+    * @param color 地砖颜色 HEX
+    */
+    constructor(size = 9, color = 0xffffff) {
+        this.color = color;
+        this.size = size;
+        this.defaultY = -2;
+        this.floortiles = this.createFloortiles(this.size, this.color);
+
+        this.moveFloor(0);
+    };
+
+    createFloortiles (size, color) {
+        const HALF_SIZE = Math.floor(size / 2);
+
+        let floortiles = new THREE.Group();
+        let floortilesCounter = 0;
+
+        for (let i = -HALF_SIZE; i <= HALF_SIZE; i++)
+            for (let j = -HALF_SIZE; j <= HALF_SIZE; j++) {
+                let tile = new THREE.Mesh(
+                    new THREE.BoxGeometry(1, 0, 1), // 初始位置在水平以下
+                    new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide })
+                );
+
+                tile.position.set(i, this.defaultY * 3, j);
+                tile.manDis = Math.abs(i) + Math.abs(j);
+
+                floortilesCounter++;
+                floortiles.add(tile);
+            }
+
+        return floortiles;
+    }
+
+    /**
+    * floor 的升降动画
+    * @param direction 0-up, 1-down
+    * @param depth 动画深度，一般用于下降 (this.defaultY)
+    */
+    moveFloor (direction, depth = this.defaultY) {
+        if (direction === undefined) {
+
+            console.error('Floor.moveFloor: "direction" is required.')
+            return;
+        }
+
+        // 地砖升降动画
+        this.floortiles.children.forEach(tile => {
+            gsap.to(tile.position, {
+                y: direction * (depth),
+                duration: 1.0 / (0.8 * Global.guiSettings_get('animateRate')),
+                ease: 'power2.inOut',
+                delay: tile.manDis * 0.05
+            });
+        });
+
+        // 轴线和网格
+        let showAxes = Global.guiSettings_get('showAxes');
+        let showGrid = Global.guiSettings_get('showGrid');
+        let animateRate = Global.guiSettings_get('animateRate');
+
+        if (showAxes) {
+            gsap.to(axesHelper.position, {
+                y: direction * (-2),
+                duration: 1.0 / animateRate,
+                ease: 'power2.inOut'
+            });
+        }
+
+        if (showGrid) {
+            const HALF_SIZE = Math.floor(this.size / 2);
+            gsap.to(gridHelper.position, {
+                y: direction * (-2),
+                duration: 1.0 / animateRate,
+                ease: 'power2.inOut'
+            });
+            gsap.to(gridHelper.material, {
+                opacity: 1 - direction,
+                duration: 1.0 / animateRate,
+                ease: 'power2.inOut',
+                delay: direction ? 0 : HALF_SIZE * HALF_SIZE * 0.05
+            });
+        }
+    }
+}

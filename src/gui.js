@@ -49,7 +49,7 @@ export async function initGUI (scene) {
     modelFolder.add({
         'Disassembletake': () => {
             App.disassembleModel();
-            App.moveFloor(1);
+            Global.floor_get().moveFloor(1);
         }
     }, 'Disassembletake');
 
@@ -57,7 +57,7 @@ export async function initGUI (scene) {
     modelFolder.add({
         'Merging': () => {
             App.mergeModel();
-            App.moveFloor(0);
+            Global.floor_get().moveFloor(0);
         }
     }, 'Merging');
 

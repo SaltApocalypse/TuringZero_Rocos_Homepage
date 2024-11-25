@@ -2,6 +2,11 @@
 // Describe: 该文件用于存放全局变量
 // =================================================== //
 
+// ========== 地面及其操作 ========== //
+let _floor = null;
+export function floor_get () { return _floor; }
+export function floor_set (input) { _floor = input; }
+
 // ========== 模型列表及其操作 ========== //
 let _modelList = null;
 export function modelList_get () { return _modelList; }
