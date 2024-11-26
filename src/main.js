@@ -17,7 +17,7 @@ async function main () {
     // 模型初始化
     const model = new APP.Model();
     if (model.modelList != [])
-        model.loadModel(model.modelList[0]);
+        model.loadModel(scene, model.modelList[0]);
 
     // 动画循环
     function animate () {

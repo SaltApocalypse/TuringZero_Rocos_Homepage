@@ -9,8 +9,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import GSAP from 'gsap';
 
-import * as GLOBAL from './global';
-
 import { DEBUG_MODE } from './main';
 import * as DEBUG from './debug';
 
@@ -85,7 +83,8 @@ export class Model {
      * @returns {*} 0 if succeed.
      */
     loadModel (scene, modelName) {
-    // 清理当前模型
+        if (!scene || !modelName) { console.error("Function missing parameter(s)."); }
+        // 清理当前模型
         if (this.model) { scene.remove(scene.getChildrenByName("currentModel")); } // NOTE: 定义所有加载的模型的名称都为 currentModel
 
         // 加载进度条
@@ -179,6 +178,8 @@ export class Floor {
      * @returns {THREE.Group} 一组地砖
      */
     createFloortiles (size, color) {
+        if (!size || !color) { console.error("Function missing parameter(s)."); }
+
         const HALF_SIZE = Math.floor(size / 2);
 
         let floortiles = new THREE.Group();
@@ -207,8 +208,8 @@ export class Floor {
     * @param {int} depth 动画深度，一般用于下降 (this.defaultY)
     */
     moveFloor (direction, depth = this.defaultY) {
-        if (direction === undefined) {
-            console.error(this.name, ': "direction" is required.')
+        if (!direction) {
+            console.error("Function missing parameter(s).");
             return;
         }
 
@@ -216,7 +217,7 @@ export class Floor {
         this.floortiles.children.forEach(tile => {
             GSAP.to(tile.position, {
                 y: direction * (depth),
-                duration: 1.0 / (0.8 * GLOBAL.guiSettings_get('animateRate')),
+                duration: 1.0,
                 ease: 'power2.inOut',
                 delay: tile.manDis * 0.05
             });
