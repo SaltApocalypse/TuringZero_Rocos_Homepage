@@ -3,4 +3,5 @@ node_modules
 
 # 个人素材
 public/models/*
+public/fonts/*
 src/backup.js

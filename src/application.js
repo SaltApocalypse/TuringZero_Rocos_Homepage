@@ -20,12 +20,13 @@ export class Scene {
      */
     constructor() {
         this.name = "Class.Scene"; // 标记
-        // 场景
-        this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color('#6588D7');
         // 相机
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.set(5, 5, 5);
+        // 场景
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color('#6588D7');
+        this.scene.add(this.camera);
         // 渲染器
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -41,11 +42,11 @@ export class Scene {
         const ambientLight = new THREE.AmbientLight(0xffffff);
         this.scene.add(ambientLight);
 
-        if (DEBUG_MODE)
-            DEBUG.DEBUG_TEST(this.scene);
+        if (DEBUG_MODE) {
+            DEBUG.DEBUG_TEST(this.scene, this.camera);
+        }
 
         return { scene: this.scene, camera: this.camera, renderer: this.renderer, controls: this.controls };
-        // return { scene: this.scene, camera: this.camera, renderer: this.renderer };
     }
 }
 
@@ -208,7 +209,7 @@ export class Floor {
     * @param {int} depth 动画深度，一般用于下降 (this.defaultY)
     */
     moveFloor (direction, depth = this.defaultY) {
-        if (!direction) {
+        if (direction == null) {
             console.error("Function missing parameter(s).");
             return;
         }

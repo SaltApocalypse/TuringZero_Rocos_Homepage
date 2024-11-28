@@ -8,6 +8,7 @@ body {
     overflow: hidden;
     /* Prevents scrollbars */
 }
+
 #canvas-container {
     position: fixed;
     top: 0;
