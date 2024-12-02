@@ -1,0 +1,356 @@
+/* =============== Fonts ==============*/
+@font-face {
+    font-family: 'CascadiaCode';
+    src: url('./fonts/CascadiaCodeNF-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'CascadiaCode';
+    src: url('./fonts/CascadiaCodeNF-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'CascadiaCode';
+    src: url('./fonts/CascadiaCodeNF-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'CascadiaCode';
+    src: url('./fonts/CascadiaCodeNF-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Maoken';
+    src: url('./fonts/Maoken.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* =============== Main ============== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    animation-duration: 1s;
+}
+
+html,
+body {
+    overflow-y: hidden;
+    /* font-family: "CascadiaCode"; */
+    font-family: "Maoken";
+    color: var(--text-coler);
+}
+
+:root {
+    --text-coler: #C5DFF8;
+    --background-color: #A0BFE0;
+    /* TODO: 配色 */
+    /* ===== light ===== */
+
+    /* ===== dark ===== */
+
+}
+
+/* =============== Theme ============== */
+/* TODO: 主题适配 */
+.light-theme {}
+
+.dark-theme {}
+
+/* =============== Experience ============== */
+.experience {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+}
+
+.experience-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* =============== Page ============== */
+.page {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.page-wrapper {
+    position: relative;
+}
+
+/* =============== Toggle Bar ============== */
+.toggle-bar {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    top: -48px;
+    right: 48px;
+    z-index: 2;
+}
+
+.sun-warpper,
+.moon-warpper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.toggle-button {
+    cursor: pointer;
+    position: relative;
+    width: 56px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--text-coler);
+    border-radius: 50px;
+    margin: 0px 16px;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+}
+
+.toggle-circle {
+    position: absolute;
+    left: 6px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: var(--background-color);
+    transition: all 0.2s ease-in-out;
+}
+
+.toggle-button:hover .toggle-circle {
+    transform: scale(0.9);
+}
+
+.slide {
+    left: 30px;
+}
+
+/* =============== progress-bar ============== */
+.progress-wrapper {
+    height: 0;
+    width: 12px;
+    z-index: 2;
+}
+
+.progress-bar-wrapper-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.progress-bar-wrapper-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.progress-bar {
+    height: 100vh;
+    width: 100%;
+    background-color: var(--text-coler);
+    transform-origin: top center;
+    transform: scaleY(1);
+}
+
+/* =============== Hero ============== */
+.hero {
+    width: 100vw;
+    height: 100vh;
+}
+
+.hero-warpper {
+    position: relative;
+    height: 100%;
+    width: calc(100% - 160px);
+    margin: 0 auto;
+    max-width: 1100px;
+}
+
+.hero-main {
+    position: absolute;
+    bottom: -20%;
+    left: 0;
+}
+
+.hero-main-title {
+    font-size: 64px;
+    font-weight: bold;
+}
+
+.hero-main-description {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.hero-second {
+    position: absolute;
+    top: -10%;
+    right: 0;
+}
+
+.hero-second-subtitle {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.hero-second-description {
+    font-size: 24px;
+    font-weight: normal;
+    font-style: italic;
+    text-transform: uppercase;
+}
+
+/* =============== Section Formatting ============== */
+.section {
+    height: 100vh;
+    width: 40%;
+    padding: 15% 5%;
+    margin: 0;
+    background-color: var(--background-color);
+    overflow-y: scroll;
+    overscroll-behavior-y: contain;
+
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.left {
+    margin-right: auto;
+    border-top-right-radius: 150px 150px;
+    border-bottom-right-radius: 150px 150px;
+}
+
+.right {
+    margin-left: auto;
+    border-top-left-radius: 150px 150px;
+    border-bottom-left-radius: 150px 150px;
+}
+
+.section-intro-wrapper {
+    position: relative;
+    padding: 20% 5%;
+    border-bottom: 2px solid var(--text-coler);
+    padding-bottom: 400px;
+}
+
+.section-detail-wrapper {
+    position: relative;
+    padding: 0 5%;
+}
+
+.section-heading {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.8;
+    margin-top: 64px;
+}
+
+.section-text {
+    font-size: 16px;
+    line-height: 2;
+    margin-top: 18px;
+}
+
+
+/* =============== Section Decoration ============== */
+.section-title {
+    position: relative;
+    color: var(--text-coler)
+}
+
+.section-title-text {
+    display: block;
+    font-size: 40px;
+    font-weight: 500;
+    transform-origin: left;
+    transform: skewY(25deg);
+    z-index: 2;
+    text-transform: uppercase;
+}
+
+.styleOne,
+.styleTwo,
+.styleThree {
+    position: absolute;
+    display: block;
+    width: 100%;
+    max-width: 278px;
+    height: 60px;
+    border: 1px solid var(--text-coler);
+    transform-origin: left;
+    transform: skewY(-25deg);
+}
+
+.styleOne {
+    top: 0px;
+}
+
+.styleTwo {
+    top: 80px;
+}
+
+.styleThree {
+    top: 80px;
+    transform: skewY(25deg);
+    background-color: var(--text-coler);
+}
+
+.section-number {
+    position: absolute;
+    font-size: 24px;
+    bottom: 15px;
+    right: 0;
+    color: var(--text-coler);
+}
+
+/* =============== first-section ============== */
+.first-section {
+    position: relative;
+    top: -100vh;
+    left: -40%;
+}
+
+/* =============== second-section ============== */
+.second-section {
+    position: relative;
+    top: -200vh;
+    right: -40%;
+}
+
+
+/* =============== Media-Queries ==============*/
+@media (max-width: 968px) {
+    .section {
+        width: 100%;
+    }
+
+    .progress-bar-wrapper-left {
+        left: auto;
+        right: 0;
+    }
+}
+
+/* TODO: 移动端适配 */
